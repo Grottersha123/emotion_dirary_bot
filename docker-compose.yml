@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  bot:
+    build: emotionbot
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - ./config.py:/usr/src/bot/config.py

@@ -12,7 +12,7 @@ import logging
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 
-from aiogram.utils.exceptions import (MessageToEditNotFound, MessageCantBeEdited, MessageCantBeDeleted,
+from aiogram.utils.exceptions import (MessageCantBeDeleted,
                                       MessageToDeleteNotFound)
 
 emotion_list = ['радость 😀', 'удивление 😮', 'грусть 😔', 'гнев 🤬', 'отвращение 😕', 'презрение 🙄', 'страх 😱',
@@ -50,11 +50,7 @@ async def process_help_command(message: types.Message):
 async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
     global emotion_choosen
     code = callback_query.data[-1]
-    if code.isdigit():
-        code = int(code)
-    if code != 7:
-        emotion_choosen.append(emotion_list[code])
-        await bot.answer_callback_query(callback_query.id, text=f'Выбрали эмоцию {emotion_list[code]}')
+    code = int(code)
     if code == 7:
         emotion_temp = "\n".join('{} - {}'.format(v, k) for k, v in Counter(emotion_choosen[:]).items())
         emotion_choosen = []
@@ -62,6 +58,9 @@ async def process_callback_kb1btn1(callback_query: types.CallbackQuery):
         await bot.send_message(callback_query.from_user.id,
                                f"*{emotion_temp}* \n------------------\n**{text_emotion}**", parse_mode='markdown')
         asyncio.create_task(delete_message(callback_query.message, TIME))
+    else:
+        emotion_choosen.append(emotion_list[code])
+        await bot.answer_callback_query(callback_query.id, text=f'Выбрали эмоцию {emotion_list[code]}')
 
 
 async def delete_message(message: types.Message, sleep_time: int = 0):

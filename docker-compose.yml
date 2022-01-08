@@ -2,9 +2,10 @@ version: '3'
 
 services:
   bot:
-    build: emotionbot
+    build: .
     ports:
       - "8080:8080"
-    restart: always
-    volumes:
-      - ./config.py:/usr/src/bot/config.py
+    restart: unless-stopped
+    environment:
+      TOKEN: "your secret token"
+      TIME: 3
